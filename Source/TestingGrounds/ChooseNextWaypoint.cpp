@@ -33,9 +33,6 @@ EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent &Own
 	auto NextIndex = (Index + 1) % PatrolledPoints.Num();
 	BlackBoard->SetValueAsInt(IndexKey.SelectedKeyName, NextIndex); // Setting the Index rather than making a new variable (NextIndex) will result in a crash when it resets to 0!
 	
-
-	UE_LOG(LogTemp, Warning, TEXT("Waypoint Index: %i"), Index)
-	
 	return EBTNodeResult::Succeeded;
 }
 
