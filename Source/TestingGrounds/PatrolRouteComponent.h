@@ -25,7 +25,7 @@ protected:
 	virtual void BeginPlay() override;
 
 private: 
-	UPROPERTY(EditInstanceOnly, Category = "Patrol Route")
+	UPROPERTY(EditAnywhere, Category = "Patrol Route")
 	TArray<AActor*> PatrolPoints;
 
 public:	
