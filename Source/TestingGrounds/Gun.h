@@ -38,10 +38,17 @@ public:
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimMontage* FireAnimation;
+	class UAnimMontage* ThirdPersonFireAnimation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimInstance* AnimInstance;
+	class UAnimMontage* FirstPersonFireAnimation;
+
+	// Should be a UPROPERTY - Bad idea to delete, can't be edited to so just leave brackets empty
+	UPROPERTY() 
+	class UAnimInstance* ThirdPersonAnimInstance;
+
+	UPROPERTY()
+	class UAnimInstance* FirstPersonAnimInstance;
 
 	/** Fires a projectile. */
 	UFUNCTION(BlueprintCallable, Category = Gameplay)

@@ -25,6 +25,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon") // consider putting this under protected
 	void PullTrigger();
 
+	virtual void UnPossessed() override;
+
 private:
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))

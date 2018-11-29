@@ -32,15 +32,23 @@ void AMannequin::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (WeaponBlueprint == NULL)
+	if (WeaponBlueprint == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Weapon Blueprint Missing!"))
 		return;
 	}
 
 	Weapon = GetWorld()->SpawnActor<AGun>(WeaponBlueprint);
-	Weapon->AttachToComponent(FPMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint")); //Attach gun mesh component to Skeleton, doing it here because the skelton is not yet created in the constructor
-	Weapon->AnimInstance = FPMesh->GetAnimInstance();
+	if (IsPlayerControlled())
+	{
+		Weapon->AttachToComponent(FPMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint")); //Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor/OnPossesed
+	}
+	else
+	{
+		Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint")); // Setting the gun for the AI so it appears in the right slot and not the first person arms
+	}
+	Weapon->ThirdPersonAnimInstance = GetMesh()->GetAnimInstance(); // Gets the first found mesh
+	Weapon->FirstPersonAnimInstance = FPMesh->GetAnimInstance();
 }
 
 // Called every frame
@@ -66,4 +74,14 @@ void AMannequin::PullTrigger()
 {
 	if (!Weapon){return;}
 	Weapon->OnFire();
+}
+
+void AMannequin::UnPossessed() 
+{
+	Super::UnPossessed(); // apparently this is run before begin play
+	if (!Weapon) // Make a "Death" function to reattach the weapon to a third person slot would probably be preferable.
+	{
+		return;
+	}
+	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint")); // Setting the gun for the AI so it appears in the right slot and not the first person arms
 }
