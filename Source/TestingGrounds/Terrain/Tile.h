@@ -12,6 +12,23 @@
 #include "NavMesh/NavMeshBoundsVolume.h"
 #include "Tile.generated.h"
 
+
+USTRUCT(BlueprintType)
+struct FSpawnPosition
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY()
+	FVector Location;
+
+	UPROPERTY()
+	FRotator Rotation;
+
+	UPROPERTY()
+	float Scale;
+};
+
+
 UCLASS()
 class TESTINGGROUNDS_API ATile : public AActor
 {
@@ -23,6 +40,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn = 1, int32 MaxSpawn = 1, float MinYaw = -180, float MaxYaw = 180, float MinPitch = 0, float MaxPitch = 0, float MinRoll = 0, float MaxRoll = 0, float Radius = 500.f, float MinScale = 1, float MaxScale = 1);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void PlaceAIPawns(TSubclassOf<APawn> ToSpawn, int32 MinSpawn = 1, int32 MaxSpawn = 1, float Radius = 50.f);
 	
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetPoolReference(class UActorPool* ActorPoolToSet);
@@ -36,6 +56,10 @@ protected:
 	FVector MinSpawningExtent;
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	FVector MaxSpawningExtent;
+
+	///Will visualise if an actor can be spawned or not. - Red can't spawn object, will retry - Green can spawn object
+	UPROPERTY(EditDefaultsOnly, Category = "Debug")
+	bool bVisualiseCanSpawn = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	FVector NavigationBoundsLocationOffset;
@@ -56,9 +80,15 @@ private:
 
 	bool FindEmptyLocation(FVector &OutLocation, float Radius); // The FVector& OutLocation will allow it to fail (since its a bool function) but still return the FVector in case it does NOT fail.
 
-	void PlaceActor(TSubclassOf<AActor> ToSpawn, FVector SpawnPoint, FRotator Rotation, float Scale);
+	template<class T>
+	void RandomlyPlaceActors(TSubclassOf<T> ToSpawn, int32 MinSpawn = 1, int32 MaxSpawn = 1, float MinYaw = -180, float MaxYaw = 180, float MinPitch = 0, float MaxPitch = 0, float MinRoll = 0, float MaxRoll = 0, float Radius = 500.f, float MinScale = 1, float MaxScale = 1);
+
+	void PlaceActor(TSubclassOf<AActor> ToSpawn, FSpawnPosition SpawnPosition);
+
+	void PlaceActor(TSubclassOf<APawn> ToSpawn, FSpawnPosition SpawnPosition);
 
 	bool CanSpawnAtLocation(FVector Location, float Radius);
 
 	AActor* NavMeshBoundsVolume = nullptr;
 };
+
