@@ -12,7 +12,7 @@ ATile::ATile()
 
 	MinSpawningExtent = FVector(0.f, -2000.f, 0.f);
 	MaxSpawningExtent = FVector(4000.f, 2000.f, 0.f);
-
+	NavigationBoundsLocationOffset = FVector(2000, 0, 0);
 }
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSpawn, float MinYaw, float MaxYaw, float MinPitch, float MaxPitch, float MinRoll, float MaxRoll, float Radius, float MinScale, float MaxScale)
@@ -53,8 +53,8 @@ void ATile::PositionNavMeshBoundsVolume()
 		return;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("[%s] Checked out: {%s}"), *GetName(), *NavMeshBoundsVolume->GetName())
-	NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
-	FNavigationSystem::Build(*GetWorld());
+	NavMeshBoundsVolume->SetActorLocation(GetActorLocation() + NavigationBoundsLocationOffset);
+	FNavigationSystem::Build(*GetWorld());	
 }
 
 bool ATile::FindEmptyLocation(FVector &OutLocation, float Radius)

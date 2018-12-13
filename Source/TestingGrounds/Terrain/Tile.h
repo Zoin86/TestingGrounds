@@ -38,7 +38,12 @@ protected:
 	FVector MaxSpawningExtent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	FVector NavigationBoundsLocationOffset;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UBoxComponent* PropSpawnBox;
+
+	
 
 public:	
 	// Called every frame
